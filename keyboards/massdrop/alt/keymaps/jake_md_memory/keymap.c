@@ -21,10 +21,6 @@ enum alt_keycodes {
     DBG_KBD,            //DEBUG Toggle Keyboard Prints                              //
     DBG_MOU,            //DEBUG Toggle Mouse Prints                                 //
     MD_BOOT,            //Restart into bootloader after hold timeout                //Working
-    NOCTRL_DEL,            //Clears any set modifiers and sends a single 'DEL'
-    NOCTRL_MPLY,
-    NOCTRL_MNXT,
-    NOCTRL_MPRV,
     KC_DEL_MPLY,
     KC_ESC_GRV,
     KC_VOLU_MPRV,
@@ -36,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC_GRV,     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL_MPLY,  \
         KC_TAB,         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MUTE, \
         KC_ESC,         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,           KC_VOLU_MPRV, \
-        KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, LM(5, MOD_LSFT),  KC_UP,   KC_VOLD_MNXT, \
+        KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, LM(4, MOD_LSFT),  KC_UP,   KC_VOLD_MNXT, \
         KC_LCTL, KC_LALT, LM(2,MOD_LGUI),                            KC_SPC,                             KC_RGUI, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT
     ),
     [1] = LAYOUT(
@@ -61,13 +57,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                    _______,                    _______, _______, _______, _______, _______  \
     ),
     [4] = LAYOUT(
-        KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, NOCTRL_DEL,   NOCTRL_MPLY, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      NOCTRL_MPLY, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          LCTL(KC_ENT), NOCTRL_MPRV, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      NOCTRL_MNXT, \
-        _______, _______, _______,                            _______,                            _______, _______, _______, _______,      _______  \
-    ),
-    [5] = LAYOUT(
         KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
@@ -236,40 +225,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     unregister_code(KC_VOLD);
                 }
-            }
-            return false;
-        case NOCTRL_DEL: ;
-            // static uint32_t _original_mods;
-            // _original_mods = get_mods();
-            if (record->event.pressed) {
-                clear_mods();
-                register_code(KC_DEL);
-            } else {
-                unregister_code(KC_DEL);
-            }
-            return false;
-        case NOCTRL_MPLY: ;
-            if (record->event.pressed) {
-                clear_mods();
-                register_code(KC_MPLY);
-            } else {
-                unregister_code(KC_MPLY);
-            }
-            return false;
-        case NOCTRL_MNXT: ;
-            if (record->event.pressed) {
-                clear_mods();
-                register_code(KC_MNXT);
-            } else {
-                unregister_code(KC_MNXT);
-            }
-            return false;
-        case NOCTRL_MPRV: ;
-            if (record->event.pressed) {
-                clear_mods();
-                register_code(KC_MPRV);
-            } else {
-                unregister_code(KC_MPRV);
             }
             return false;
         case NK_TOGG:
