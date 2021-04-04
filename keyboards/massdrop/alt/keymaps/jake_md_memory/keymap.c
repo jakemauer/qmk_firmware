@@ -24,16 +24,20 @@ enum alt_keycodes {
     NOCTRL_DEL,            //Clears any set modifiers and sends a single 'DEL'
     NOCTRL_MPLY,
     NOCTRL_MNXT,
-    NOCTRL_MPRV
+    NOCTRL_MPRV,
+    KC_DEL_MPLY,
+    KC_ESC_GRV,
+    KC_VOLU_MPRV,
+    KC_VOLD_MNXT
     };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        KC_ESC,        KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_ESC_GRV,     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL_MPLY,  \
         KC_TAB,         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MUTE, \
-        KC_ESC,         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,           KC_VOLU, \
-        KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          LM(5, MOD_LSFT), KC_UP,   KC_VOLD, \
-        LM(4,MOD_LCTL), KC_LALT, LM(2,MOD_LGUI),                            KC_SPC,                             KC_RGUI, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT
+        KC_ESC,         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,           KC_VOLU_MPRV, \
+        KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, LM(5, MOD_LSFT),  KC_UP,   KC_VOLD_MNXT, \
+        KC_LCTL, KC_LALT, LM(2,MOD_LGUI),                            KC_SPC,                             KC_RGUI, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT
     ),
     [1] = LAYOUT(
         KC_GRV,  KC_SLCK, KC_PAUS, KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_TRNS,      KC_MPLY, \
@@ -171,6 +175,66 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 if (timer_elapsed32(key_timer) >= 500) {
                     reset_keyboard();
+                }
+            }
+            return false;
+        case KC_ESC_GRV: ;
+            if (record->event.pressed) {
+                if (MODS_CTRL) {
+                    register_code(KC_GRV);
+                } else {
+                    register_code(KC_ESC);
+                }
+            } else {
+                if (MODS_CTRL) {
+                    unregister_code(KC_GRV);
+                } else {
+                    unregister_code(KC_ESC);
+                }
+            }
+            return false;
+        case KC_DEL_MPLY: ;
+            if (record->event.pressed) {
+                if (MODS_CTRL) {
+                    register_code(KC_MPLY);
+                } else {
+                    register_code(KC_DEL);
+                }
+            } else {
+                if (MODS_CTRL) {
+                    unregister_code(KC_MPLY);
+                } else {
+                    unregister_code(KC_DEL);
+                }
+            }
+            return false;
+        case KC_VOLU_MPRV: ;
+            if (record->event.pressed) {
+                if (MODS_CTRL) {
+                    register_code(KC_MPRV);
+                } else {
+                    register_code(KC_VOLU);
+                }
+            } else {
+                if (MODS_CTRL) {
+                    unregister_code(KC_MPRV);
+                } else {
+                    unregister_code(KC_VOLU);
+                }
+            }
+            return false;
+        case KC_VOLD_MNXT: ;
+            if (record->event.pressed) {
+                if (MODS_CTRL) {
+                    register_code(KC_MNXT);
+                } else {
+                    register_code(KC_VOLD);
+                }
+            } else {
+                if (MODS_CTRL) {
+                    unregister_code(KC_MNXT);
+                } else {
+                    unregister_code(KC_VOLD);
                 }
             }
             return false;
