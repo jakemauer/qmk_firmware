@@ -21,18 +21,21 @@ enum alt_keycodes {
     DBG_KBD,            //DEBUG Toggle Keyboard Prints                              //
     DBG_MOU,            //DEBUG Toggle Mouse Prints                                 //
     MD_BOOT,            //Restart into bootloader after hold timeout                //Working
+    KC_BSPC_DEL,
     KC_DEL_MPLY,
     KC_ESC_GRV,
     KC_VOLU_MPRV,
     KC_VOLD_MNXT
     };
 
+bool is_del_active = false;
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        KC_ESC_GRV,     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL_MPLY,  \
+        KC_ESC_GRV,     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC_DEL, KC_DEL_MPLY,  \
         KC_TAB,         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MUTE, \
-        KC_ESC,         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,           KC_VOLU_MPRV, \
-        KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, LM(4, MOD_LSFT),  KC_UP,   KC_VOLD_MNXT, \
+        KC_ESC,         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,           KC_MPRV, \
+        KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, LM(4, MOD_LSFT),  KC_UP,   KC_MNXT, \
         KC_LCTL, KC_LALT, LM(2,MOD_LGUI),                            KC_SPC,                             KC_RGUI, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT
     ),
     [1] = LAYOUT(
@@ -164,6 +167,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 if (timer_elapsed32(key_timer) >= 500) {
                     reset_keyboard();
+                }
+            }
+            return false;
+        case KC_BSPC_DEL: ;
+            if (record->event.pressed) {
+                if (MODS_CTRL) {
+                    clear_mods();
+                    register_code(KC_DEL);
+                    register_code(KC_LCTL);
+                } else {
+                    register_code(KC_BSPC);
+                }
+            } else {
+                if (MODS_CTRL) {
+                    unregister_code(KC_DEL);
+                } else {
+                    unregister_code(KC_BSPC);
                 }
             }
             return false;
