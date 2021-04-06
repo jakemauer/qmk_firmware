@@ -28,7 +28,13 @@ enum alt_keycodes {
     KC_VOLD_MNXT
     };
 
-bool is_del_active = false;
+#define WITHOUT_MODS(...) \
+  do { \
+    const uint8_t _real_mods = get_mods(); \
+    clear_mods(); \
+    { __VA_ARGS__ } \
+    set_mods(_real_mods); \
+  } while (0)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
@@ -173,9 +179,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_BSPC_DEL: ;
             if (record->event.pressed) {
                 if (MODS_CTRL) {
-                    clear_mods();
-                    register_code(KC_DEL);
-                    register_code(KC_LCTL);
+                    WITHOUT_MODS({
+                      register_code(KC_DEL);
+                    });
                 } else {
                     register_code(KC_BSPC);
                 }
