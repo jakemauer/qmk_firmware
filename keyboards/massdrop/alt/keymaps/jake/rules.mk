@@ -1,0 +1,2 @@
+KEY_OVERRIDE_ENABLE = yes
+NKRO_ENABLE = yes
